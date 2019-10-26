@@ -27,7 +27,14 @@ class PlotBase:
         fig = plt.figure()
         self._subplots.append(fig.add_subplot(1, 1, 1))
 
-        self._dataframe.plot(kind=plotconfig["kind"], x=plotconfig["x_column"], y=plotconfig["y_column"], ax=self._subplots[0])
+        # Allow for multiple columns passed as a list
+        if isinstance(plotconfig["y_column"], list):
+            y_columns = plotconfig["y_column"]
+        else:
+            y_columns = [plotconfig["y_column"]]
+        for y_column in y_columns:
+            self._dataframe.plot(kind=plotconfig["kind"], x=plotconfig["x_column"], y=y_column, ax=self._subplots[0])
+
 
         plt.subplots_adjust(bottom=0.3)
         self._subplots[0].set_title(plotconfig["plot_title"], fontsize=12)

@@ -267,65 +267,29 @@ Utility:
 - Also to detect idle (unused device) left at the university
 
 
-Virtual LAN(vlan)
+SSID(ssid)
 -------
-Description: The id of a virtual lan segment.
+Description: The name of the wi-fi network the client is connected to.
 ```text
-SQL: SELECT DISTINCT(vlan) FROM wifi_clients'
+SQL: SELECT DISTINCT(ssid) FROM wifi_clients ORDER BY ssid'
 
-    vlan
-0      0
-1      1
-2     29
-3    200
-4    201
-5    207
-6    209
-7    211
-8    213
-9    220
-10   222
-11   224
-12   300
-13   301
-14   302
-15   303
-16   304
-17   305
-18   306
-19   307
-20   308
-21   309
-22   310
-23   311
-24   312
-25   313
-26   314
-27   315
-28   316
-29   317
-30   318
-31   319
-32   320
-33   321
-34   322
-35   323
-36   324
-37   325
-38   326
-39   327
-40   328
-41   329
-42   330
-43   501
-44   503
-45   505
-46   507
+             ssid
+0             5te
+1         eduroam
+2           ITU++
+3       ITU-guest
+4  ITU-guest-test
+5         sensors
 ```
 
-Utility:
-- Probably the ITU network is subdivided into vlan sections so it could be used to ...
+![Plot 5](Plots/plot_5.png?raw=true "Plot 5")
 
+![Plot 6](Plots/plot_6.png?raw=true "Plot 6")
+
+Utility:
+- Students who use the wi-fi regularly at ITU use either "eduroam" or "ITU++". These networks will also have non-students. 
+- Eduroam: We might have external students OR students who are still using previous education assigned credentials.
+- We can quite surely exclude "5TE" and "sensors"
 
 
 
