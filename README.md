@@ -8,6 +8,7 @@ ID(id)
 ------
 Description: Incremental unique id
 
+
 Timestamp(ts)
 -------------
 Description: The timestamp created by the database server when the payload was received. Consecutive timestamps are
@@ -29,6 +30,7 @@ GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
 Utility:
 - each connection payload needs to be identifiable in time so we can establish if a user is present at the institution
 or not.
+
 
 MQTT Batch(mqtt_batch)
 ----------------------
@@ -62,6 +64,7 @@ WHERE ts >= "2019-10-10 00:00:00"
 GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
 ;
 ```
+
 
 Client ID(client_id)
 --------------------
@@ -144,6 +147,83 @@ Utility:
 - Could be used to track movements and patterns
 
 
+Host Name(host_name)
+---------------------
+Description: Don't really know. Hashed host name of ???
+```text
+SQL: SELECT DISTINCT(host_name) FROM wifi_clients'
+
+                                              host_name
+0                      RGR4V0JTWXA4YjJUMzJ4VStNU3kwUT09
+1                      N0QwSkRRY1VVdmNIYi9QZ3BuRHpRQT09
+2                      d2tRQ1JmcmlkS2RlVHBxYURteDFKUT09
+3                      eXZubzMxRGRNMDhjK2xpVFNlMFdhZz09
+4                      anptR0pzWjgwdVBWd1VIVjlna3VHQT09
+...                                                 ...
+4518  Um1hNytJd3JXckRUV0ZRWTRvRmpnSHQzOE03b1IvdjFRY2...
+4519                   bG80bitnaWxrQkpGWE1nbzZoQy9SQT09
+4520                   MmQrWXR6Ly9Nb2JjV3dYQUlHWnFBdz09
+4521  aUJtZjhYV21qUlE1VFdZTFM2MFcvVDQyZnV3bnhNdEVDSn...
+4522                   V0xMTndYZjJWT0NsL1hHaXNldE5qZz09
+
+[4523 rows x 1 columns]
+```
+
+Utility:
+- Dubious
+
+
+IP(ip)
+------
+Description: Don't really know. Ip address of ???
+```text
+SQL: SELECT DISTINCT(host_name) FROM wifi_clients'
+
+                ip
+0      10.28.2.158
+1      10.28.2.198
+2       10.28.2.65
+3      10.28.2.115
+4        10.28.2.7
+...            ...
+10931  10.26.36.55
+10932   10.26.4.25
+10933  10.29.0.225
+10934  10.29.0.226
+10935  10.28.40.76
+
+[10936 rows x 1 columns]
+```
+
+Utility:
+- Dubious
+
+
+User Name(user_name)
+---------------------
+Description: Hashed username used to authenticate to get access to the wifi.
+```text
+SQL: SELECT DISTINCT(user_name) FROM wifi_clients'
+
+                                              user_name
+0                      a00zd3RIckJzTXdUZXRZSFExT0FTZz09
+1                      a0dTZFhFSUJxZFQ3NTV1TjJlc0svUT09
+2                      a0dYTHBqa3VSYmk0cmFEQ2EyRWNFUT09
+3     a0gwTnF3T1drN2ZyNWY2SCtVZEswSnQ4b0lqTURUMGhMTW...
+4                      a0JHMjlIYjhMelZFUjZsRVJ0bDhzUT09
+...                                                 ...
+4087                   ZzFKdHhOamxkQWJkTlluaTR4eHlndz09
+4088                   ZzluUlN3WGQreEI0NDlGaThZMEU1dz09
+4089                   ZzRheHFaZEk4NGlMR2d3OHVtbVJGQT09
+4090                   ZzYyL3gwQ0g5U3NrelpxdzFFd3Uxdz09
+4091                   ZzZJb3VNdmJNTytlcSsyTDVDdFJWQT09
+
+[4092 rows x 1 columns]
+```
+
+Utility:
+- Pseudonymised ITU username making a natural person identifiable
+- Could be present multiple times in batches if user has multiple devices
 
 
 OS(os)
@@ -158,6 +238,95 @@ SELECT DISTINCT(os) AS OS, COUNT(*) AS CNT FROM wifi_clients GROUP BY os ORDER B
 ```
 
 Utility:
-- none
+- none? Could be used for statistical purposes
 - needs to be removed
+
+
+Wifi Usage(wifi_usage)
+-------
+Description: The number of bytes transferred during the session (in/out?).
+```text
+SQL: SELECT DISTINCT(wifi_usage) FROM wifi_clients'
+
+         wifi_usage
+count  3.752750e+05
+mean   2.724465e+07
+std    1.955823e+08
+min    0.000000e+00
+25%    1.755155e+05
+50%    1.322009e+06
+75%    8.359870e+06
+max    1.109595e+10
+
+mean: 27244650 -> 25Mb
+max: ~10.33Gb
+```
+
+Utility:
+- Could be used to trigger a warning on abnormal usage
+- Also to detect idle (unused device) left at the university
+
+
+Virtual LAN(vlan)
+-------
+Description: The id of a virtual lan segment.
+```text
+SQL: SELECT DISTINCT(vlan) FROM wifi_clients'
+
+    vlan
+0      0
+1      1
+2     29
+3    200
+4    201
+5    207
+6    209
+7    211
+8    213
+9    220
+10   222
+11   224
+12   300
+13   301
+14   302
+15   303
+16   304
+17   305
+18   306
+19   307
+20   308
+21   309
+22   310
+23   311
+24   312
+25   313
+26   314
+27   315
+28   316
+29   317
+30   318
+31   319
+32   320
+33   321
+34   322
+35   323
+36   324
+37   325
+38   326
+39   327
+40   328
+41   329
+42   330
+43   501
+44   503
+45   505
+46   507
+```
+
+Utility:
+- Probably the ITU network is subdivided into vlan sections so it could be used to ...
+
+
+
+
 
