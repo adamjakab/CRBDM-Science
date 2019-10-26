@@ -281,6 +281,21 @@ SQL: SELECT DISTINCT(ssid) FROM wifi_clients ORDER BY ssid'
 4  ITU-guest-test
 5         sensors
 ```
+```mysql
+# SQL for plots:
+SELECT DATE_FORMAT(MIN(ts), "%Y-%m-%d %H:00:00")                             AS TS,
+       ROUND(COUNT(*) / COUNT(DISTINCT mqtt_batch))                          AS CNT_PER_MIN,
+       COUNT(DISTINCT mqtt_batch)                                            AS BN,
+       ROUND(SUM(IF(ssid = '5te', 1, 0)) / COUNT(DISTINCT mqtt_batch))       AS CNT_5TE,
+       ROUND(SUM(IF(ssid = 'eduroam', 1, 0)) / COUNT(DISTINCT mqtt_batch))   AS CNT_EDUROAM,
+       ROUND(SUM(IF(ssid = 'ITU++', 1, 0)) / COUNT(DISTINCT mqtt_batch))     AS CNT_ITU_PLUS,
+       ROUND(SUM(IF(ssid = 'ITU-guest', 1, 0)) / COUNT(DISTINCT mqtt_batch)) AS CNT_ITU_GUEST,
+       ROUND(SUM(IF(ssid = 'sensors', 1, 0)) / COUNT(DISTINCT mqtt_batch))   AS CNT_SENSORS
+FROM wifi_clients
+WHERE ts >= "2019-10-23 22:00:00"
+GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
+; 
+```
 
 ![Plot 5](Plots/plot_5.png?raw=true "Plot 5")
 
@@ -290,6 +305,72 @@ Utility:
 - Students who use the wi-fi regularly at ITU use either "eduroam" or "ITU++". These networks will also have non-students. 
 - Eduroam: We might have external students OR students who are still using previous education assigned credentials.
 - We can quite surely exclude "5TE" and "sensors"
+
+
+Session Start(session_start)
+-------
+Description: The timestamp when the session started for this client.
+
+Utility:
+- Could be used to determine how long a client stays at ITU hence putting together not only if he is present but also 
+for how long
+
+
+User Profile(user_profile)
+-------
+Description: The type of profile the client has. These types are defined by the infrastructure.
+```text
+SQL: SELECT DISTINCT(user_profile) FROM wifi_clients'
+
+      user_profile
+0    Authenticated
+1            Guest
+2           Sensor
+3  default-profile
+4            5te-1
+5            5te-3
+6            5te-5
+7            5te-7
+```
+
+![Plot 7](Plots/plot_7.png?raw=true "Plot 7")
+
+```mysql
+# SQL for plots:
+SELECT DATE_FORMAT(MIN(ts), "%Y-%m-%d %H:00:00")                                           AS TS,
+       ROUND(COUNT(*) / COUNT(DISTINCT mqtt_batch))                                        AS CNT_PER_MIN,
+       COUNT(DISTINCT mqtt_batch)                                                          AS BN,
+       ROUND(SUM(IF(user_profile = "Authenticated", 1, 0)) / COUNT(DISTINCT mqtt_batch))   AS UP_AUTH,
+       ROUND(SUM(IF(user_profile = "Guest", 1, 0)) / COUNT(DISTINCT mqtt_batch))           AS UP_GUEST,
+       ROUND(SUM(IF(user_profile = "Sensor", 1, 0)) / COUNT(DISTINCT mqtt_batch))          AS UP_SENSOR,
+       ROUND(SUM(IF(user_profile = "default-profile", 1, 0)) / COUNT(DISTINCT mqtt_batch)) AS UP_DEFPROF,
+       ROUND(SUM(IF(user_profile = "5te-1", 1, 0)) / COUNT(DISTINCT mqtt_batch))           AS UP_5TE_1,
+       ROUND(SUM(IF(user_profile = "5te-3", 1, 0)) / COUNT(DISTINCT mqtt_batch))           AS UP_5TE_3,
+       ROUND(SUM(IF(user_profile = "5te-5", 1, 0)) / COUNT(DISTINCT mqtt_batch))           AS UP_5TE_5,
+       ROUND(SUM(IF(user_profile = "5te-7", 1, 0)) / COUNT(DISTINCT mqtt_batch))           AS UP_5TE_7
+FROM wifi_clients
+WHERE ts >= "2019-10-24 22:00:00"
+GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
+; 
+```
+
+```text
+# DATA EXTRACT:
+| TS | CNT\_PER\_MIN | BN | UP\_AUTH | UP\_GUEST | UP\_SENSOR | UP\_DEFPROF | UP\_5TE\_1 | UP\_5TE\_3 | UP\_5TE\_5 | UP\_5TE\_7 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 2019-10-25 07:00:00 | 102 | 60 | 85 | 2 | 11 | 0 | 3 | 2 | 0 | 0 |
+| 2019-10-25 08:00:00 | 606 | 60 | 568 | 14 | 12 | 0 | 7 | 5 | 0 | 0 |
+| 2019-10-25 09:00:00 | 1049 | 59 | 990 | 32 | 11 | 1 | 6 | 9 | 0 | 0 |
+| 2019-10-25 10:00:00 | 1311 | 59 | 1242 | 40 | 12 | 0 | 8 | 9 | 0 | 0 |
+| 2019-10-25 11:00:00 | 1277 | 59 | 1205 | 45 | 12 | 0 | 6 | 9 | 0 | 0 |
+| 2019-10-25 12:00:00 | 1164 | 60 | 1099 | 38 | 11 | 1 | 7 | 9 | 0 | 0 |
+| 2019-10-25 13:00:00 | 1100 | 59 | 1043 | 30 | 12 | 0 | 7 | 8 | 0 | 0 |
+```
+
+Utility:
+- We are most probably need to look at "Authenticated" profiles. Sensors are not useful for us. and the other ones are almost zero.
+- The "guest" network might have some first time users... 
+
 
 
 
