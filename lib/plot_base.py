@@ -35,6 +35,7 @@ class PlotBase:
         ax1.tick_params(axis="x", labelrotation=45, labelsize=7)
         ax1.tick_params(axis="y", labelrotation=0, labelsize=7)
 
+        ax1.xaxis.set_major_formatter(StrMethodFormatter('{x:,.0f}'))
         ax1.yaxis.set_major_formatter(StrMethodFormatter('{x:,.0f}'))
 
     @staticmethod
