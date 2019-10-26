@@ -19,7 +19,7 @@ with open(config_file) as config_file:
     config = json.load(config_file)
 
 plotconfig = {
-    "number": 2,
+    "number": 1,
     "kind": "bar",
     "sql": 'SELECT DISTINCT(os) AS OS, COUNT(*) AS CNT FROM wifi_clients GROUP BY os ORDER BY CNT DESC',
     "x_column": "OS",
@@ -31,5 +31,6 @@ plotconfig = {
 
 config["plot"] = plotconfig
 pb = PlotBase(config)
-pb.show()
 pb.save()
+pb.show()
+

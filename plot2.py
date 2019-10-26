@@ -31,5 +31,6 @@ plotconfig = {
 
 config["plot"] = plotconfig
 pb = PlotBase(config)
-pb.show()
 pb.save()
+pb.show()
+
