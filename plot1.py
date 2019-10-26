@@ -31,6 +31,11 @@ plotconfig = {
 
 config["plot"] = plotconfig
 pb = PlotBase(config)
-pb.save()
-# pb.show()
+pb.setup_dataframe()
+# df = pb.get_dataframe()
+# # modify df
+# pb.set_dataframe(df)
+pb.plot()
+# pb.save()
+pb.show()
 

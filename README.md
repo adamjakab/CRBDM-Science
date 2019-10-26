@@ -13,6 +13,19 @@ Timestamp(ts)
 Description: The timestamp created by the database server when the payload was received. Consecutive timestamps are
 received 1 minute apart. The current configuration stores at the same frequency.
 
+![Plot 4](Plots/plot_4.png?raw=true "Plot 4")
+
+SQL:
+```mysql
+SELECT
+       DATE_FORMAT(MIN(ts), "%Y-%m-%d %H:00:00") AS TS,
+       ROUND(COUNT(*) / COUNT(DISTINCT mqtt_batch)) AS CNT_PER_MIN
+FROM wifi_clients
+WHERE ts >= "2019-10-10 00:00:00"
+GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
+;
+```
+
 Utility:
 - each connection payload needs to be identifiable in time so we can establish if a user is present at the institution
 or not.
@@ -36,6 +49,24 @@ WHERE ts >= DATE_SUB(NOW(),INTERVAL 1 HOUR)
 GROUP BY mqtt_batch
 ORDER BY mqtt_batch
 ```
+
+![Plot 3](Plots/plot_3.png?raw=true "Plot 3")
+
+SQL:
+```mysql
+SELECT
+       DATE_FORMAT(MIN(ts), "%Y-%m-%d %H:00:00") AS TS,
+       COUNT(DISTINCT mqtt_batch) AS BATCH_COUNT
+FROM wifi_clients
+WHERE ts >= "2019-10-10 00:00:00"
+GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
+;
+```
+
+Client ID(client_id)
+-------
+Description: The Operating System installed on the connected client.
+
 
 OS(os)
 -------
