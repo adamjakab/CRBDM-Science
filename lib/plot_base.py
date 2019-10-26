@@ -44,8 +44,8 @@ class PlotBase:
     def save(self):
         plotconfig = self._config["plot"]
         filename = 'Plots/plot_{0}.png'.format(plotconfig["number"])
-        if os.path.isfile(filename):
-            os.remove(filename)
+        # if os.path.isfile(filename):
+        #     os.remove(filename)
         plt.savefig(filename)
 
     def get_db_connection(self):
