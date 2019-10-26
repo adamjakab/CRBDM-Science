@@ -8,6 +8,7 @@
 
 import json
 import os
+from datetime import datetime
 
 from lib.plot_base import PlotBase
 
@@ -18,17 +19,18 @@ config_file = __script_dir__ + '/configuration.json'
 with open(config_file) as config_file:
     config = json.load(config_file)
 
+now = datetime.now()
 
 plotconfig = {
     "number": 2,
     "kind": "line",
     "sql": 'SELECT mqtt_batch, MIN(ts) AS TS, COUNT(*) AS CNT FROM wifi_clients '
-           'WHERE ts >= DATE_SUB(NOW(),INTERVAL 1 HOUR) GROUP BY mqtt_batch ORDER BY mqtt_batch',
+           'WHERE ts >= DATE_SUB(NOW(),INTERVAL 24 HOUR) GROUP BY mqtt_batch ORDER BY mqtt_batch',
     "x_column": "mqtt_batch",
     "y_column": "CNT",
     "x_title": "Batch Number",
     "y_title": "Count",
-    "plot_title": "Connections in the last hour",
+    "plot_title": "Connections in the last 24 hours({0})".format(now.strftime("%Y-%m-%d %H:%M")),
 }
 
 config["plot"] = plotconfig
