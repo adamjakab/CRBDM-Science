@@ -64,7 +64,7 @@ def get_panda_frame(sql, index_col=None):
     return f
 
 
-print("Now you can use 'get_panda_frame(sql,index_col)' to get a panda frame.")
+# print("Now you can use 'get_panda_frame(sql,index_col)' to get a panda frame.")
 
 # pd.set_option('display.expand_frame_repr', False)
 
