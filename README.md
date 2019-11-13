@@ -12,7 +12,7 @@ Description: Incremental unique id
 Timestamp(ts)
 -------------
 Description: The timestamp created by the database server when the payload was received. Consecutive timestamps are
-received 1 minute apart. The current configuration stores at the same frequency.
+received 5 minute apart. The current configuration stores at the same frequency.
 
 ![Plot 4](Plots/hourly_average_client_count_full_period.png?raw=true "Plot 4")
 
@@ -31,7 +31,7 @@ or not.
 
 MQTT Batch(mqtt_batch)
 ----------------------
-Description: The payloads come in batches 1 minute apart. Each batch will contain 1 to N connection payloads. This
+Description: The payloads come in batches 5 minute apart. Each batch will contain 1 to N connection payloads. This
 number serves the purpose to be able to identify the payloads that arrived together in the same batch. The number of 
 payloads per batch tells the actual number of connected devices at ITU in a certain point.
 
