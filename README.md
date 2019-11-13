@@ -14,17 +14,14 @@ Timestamp(ts)
 Description: The timestamp created by the database server when the payload was received. Consecutive timestamps are
 received 1 minute apart. The current configuration stores at the same frequency.
 
-![Plot 4](Plots/plot_4.png?raw=true "Plot 4")
+![Plot 4](Plots/hourly_average_client_count_full_period.png?raw=true "Plot 4")
 
 SQL:
 ```mysql
-SELECT
-       DATE_FORMAT(MIN(ts), "%Y-%m-%d %H:00:00") AS TS,
-       ROUND(COUNT(*) / COUNT(DISTINCT mqtt_batch)) AS CNT_PER_MIN
-FROM wifi_clients
-WHERE ts >= "2019-10-10 00:00:00"
-GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
-;
+SELECT 
+    v.ts AS TS,
+    v.per_minute_count AS CNT_PER_MIN
+FROM v__wcb__h__record_counts AS v;
 ```
 
 Utility:
