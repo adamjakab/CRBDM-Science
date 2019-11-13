@@ -56,13 +56,10 @@ ORDER BY mqtt_batch
 
 SQL:
 ```mysql
-SELECT
-       DATE_FORMAT(MIN(ts), "%Y-%m-%d %H:00:00") AS TS,
-       COUNT(DISTINCT mqtt_batch) AS BATCH_COUNT
-FROM wifi_clients
-WHERE ts >= "2019-10-10 00:00:00"
-GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
-;
+SELECT 
+    v.ts AS TS, 
+    v.mqtt_count AS BATCH_COUNT 
+FROM v__wcb__h__record_counts AS v;
 ```
 
 
