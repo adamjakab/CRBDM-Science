@@ -1,53 +1,71 @@
+#!/usr/bin/env python
+#
+#  Author: Adam Jakab
+#  Copyright: Copyright (c) 2019., Adam Jakab
+#  License: See LICENSE.txt
+#  Email: adaja at itu dot dk
+#
+
+
+import json
 import logging.config
+import os
+import sys
+import pandas as pd
 
 import pymysql.cursors
 from pymysql import OperationalError
-from pymysql import Error as PyMysqlError
-import json
-import os
-import sys
+
+_config = None
 
 __script_dir__ = os.path.dirname(os.path.realpath(__file__))
-config_file = __script_dir__ + '/config.json'
-log_configuration_file = __script_dir__ + '/logconfig.ini'
-
-
-logging.config.fileConfig(log_configuration_file)
-logger = logging.getLogger(__name__)
-
-
-
-
-def _connect_do_database(cfg):
-    # Connect to the database - https://pypi.org/project/PyMySQL/
-    try:
-        _connection = pymysql.connect(host=cfg["host"],
-                                      user=cfg["user_name"],
-                                      password=cfg["password"],
-                                      db=cfg["database"],
-                                      charset=cfg["charset"])
-    except OperationalError as e:
-        logger.error("Connection error: {0}".format(e))
-        raise e
-
-    logger.info("Connected(var: _conn).")
-    return _connection
+config_file = __script_dir__ + '/configuration.json'
+log_config_file = __script_dir__ + '/logconfig.ini'
 
 
 # Load configuration file
 try:
     with open(config_file) as config_file:
-        full_configuration = json.load(config_file)
+        _config = json.load(config_file)
 except Exception as e:
     print("The configuration file cannot be opened! Fatal error: {0}".format(e))
     sys.exit(201)
 
-# Default configuration
-cfg = full_configuration["default"]
+# Set up logging
+if os.path.isfile(log_config_file) is False:
+    print("Fatal error: The log configuration file does not exist: '{0}'".format(log_config_file))
+    sys.exit(203)
 
-#logger.info(cfg)
+logging.config.fileConfig(log_config_file)
+logger = logging.getLogger(__name__)
 
-_conn = _connect_do_database(cfg["connection"])
 
+def get_db_connection():
+    conn_data = _config["db"]
+    try:
+        _connection = pymysql.connect(host=conn_data["host"],
+                                      user=conn_data["username"],
+                                      password=conn_data["password"],
+                                      db=conn_data["database"],
+                                      charset=conn_data["charset"],
+                                      cursorclass=pymysql.cursors.DictCursor
+                                      )
+    except OperationalError as e:
+        logger.error("MysqlDestination: Unable to connect to database. {0}".format(e))
+        raise e
+
+    return _connection
+
+
+def get_panda_frame(sql, index_col=None):
+    _conn = get_db_connection()
+    f = pd.read_sql(sql, _conn, index_col=index_col)
+    _conn.close()
+    return f
+
+
+# print("Now you can use 'get_panda_frame(sql,index_col)' to get a panda frame.")
+
+# pd.set_option('display.expand_frame_repr', False)
 
 

@@ -1,5 +1,9 @@
 # IDE RELATED
 .idea/**
+configuration.json
+crbdm.log
+cache/**
+
 
 config.json
 
