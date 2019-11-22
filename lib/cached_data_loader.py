@@ -14,23 +14,24 @@ import pymysql.cursors
 from pymysql import OperationalError
 
 
-class DataLoader:
+class CachedDataLoader:
     __base_dir__ = None
     _config = None
     _cache_data = False
-    _max_cache_file_age = 1 * 24 * 60 * 60
+    _max_cache_file_age = 3 * 24 * 60 * 60
 
     def __init__(self, cache_data=True):
         self._cache_data = cache_data
 
-        # Load configuration file
         self.__base_dir__ = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+        # Load configuration file
         config_file = self.__base_dir__ + '/configuration.json'
         with open(config_file) as config_file:
             self._config = json.load(config_file)
 
-        # Other Options
-        pd.set_option('display.max_rows', None)
+        # Do some maintenance
+        self._clear_cache()
 
     def get_dataframe(self, sql, reindex=False):
         index_column = None
@@ -83,20 +84,10 @@ class DataLoader:
 
     def _get_cached_panda_frame(self, sql):
         df = None
-
         if self._cache_data:
             cache_file_path = self._get_cache_file_path(sql)
-            # print("Cache file path: {0}".format(cache_file_path))
             if os.path.isfile(cache_file_path):
-                now = datetime.now()
-                creation_time = datetime.fromtimestamp(os.path.getmtime(cache_file_path))
-                delta = now - creation_time
-                if delta.total_seconds() > self._max_cache_file_age:
-                    os.remove(cache_file_path)
-                    print("Old cache file deleted.")
-                else:
-                    df = pd.read_pickle(cache_file_path)
-                    print("Reusing cache data")
+                df = pd.read_pickle(cache_file_path)
 
         return df
 
@@ -109,3 +100,15 @@ class DataLoader:
         cache_file_name = "{0}.{1}".format(cache_name_base, cache_extension)
         cache_file_path = "{0}/cache/{1}".format(self.__base_dir__, cache_file_name)
         return cache_file_path
+
+    def _clear_cache(self):
+        now = datetime.now()
+        cache_path = "{0}/cache/".format(self.__base_dir__)
+        files = os.listdir(cache_path)
+        for file in files:
+            cache_file_path = "{0}/{1}".format(cache_path, file)
+            creation_time = datetime.fromtimestamp(os.path.getmtime(cache_file_path))
+            delta = now - creation_time
+            if delta.total_seconds() > self._max_cache_file_age:
+                os.remove(cache_file_path)
+                #print("Old cache file({0}) deleted.".format(file))
