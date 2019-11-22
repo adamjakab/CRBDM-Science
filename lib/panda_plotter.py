@@ -27,7 +27,7 @@ class PandaPlotter:
 
 
     def plot(self, plotconfig, df, show=True, save=False):
-        fig = plt.figure(num=None, figsize=(8, 5), dpi=96, facecolor='w', edgecolor='k')
+        fig = plt.figure(num=None, figsize=(10, 5), dpi=96, facecolor='w', edgecolor='k')
         ax = fig.add_subplot(1, 1, 1)
 
         # Colors (from .colors import xkcd_rgb, crayons)
@@ -53,18 +53,32 @@ class PandaPlotter:
             ax.fill_between(x, 0, y, alpha=.2, facecolor=palette[3])
 
         # X ticks
-        x_major_ticks = x[0::24]
-        x_minor_ticks = x[0::6]
+        x_major_ticks_freq = 100
+        x_minor_ticks_freq = 25
+        if "x_major_ticks_freq" in plotconfig:
+            x_major_ticks_freq = plotconfig["x_major_ticks_freq"]
+        if "x_minor_ticks_freq" in plotconfig:
+            x_minor_ticks_freq = plotconfig["x_minor_ticks_freq"]
+
+        x_major_ticks = x[0::x_major_ticks_freq]
+        x_minor_ticks = x[0::x_minor_ticks_freq]
         ax.set_xticks(x_major_ticks)
         ax.set_xticks(x_minor_ticks, minor=True)
 
         # Y ticks
+        y_major_ticks_freq = 100
+        y_minor_ticks_freq = 25
+        if "y_major_ticks_freq" in plotconfig:
+            y_major_ticks_freq = plotconfig["y_major_ticks_freq"]
+        if "y_minor_ticks_freq" in plotconfig:
+            y_minor_ticks_freq = plotconfig["y_minor_ticks_freq"]
+
         y_column = y_columns[0]
         y = df[y_column]
-        y = np.array(range(min(y), max(y) + 1))
+        y = np.array(range(0, int(max(y)) + 1))
 
-        y_major_ticks = y[0::2]
-        y_minor_ticks = y[0::1]
+        y_major_ticks = y[0::y_major_ticks_freq]
+        y_minor_ticks = y[0::y_minor_ticks_freq]
         ax.set_yticks(y_major_ticks)
         ax.set_yticks(y_minor_ticks, minor=True)
 
@@ -76,7 +90,9 @@ class PandaPlotter:
         ax.grid(which='major', alpha=0.8)
 
 
-        plt.subplots_adjust(bottom=0.3)
+        plt.subplots_adjust(top=0.93, bottom=0.2, left=0.07, right=0.97, hspace=0.2, wspace=0.2)
+
+
         ax.set_title(plotconfig["plot_title"], fontsize=12)
         ax.set_xlabel(plotconfig["x_label"], fontsize=9)
         ax.set_ylabel(plotconfig["y_label"], fontsize=9)

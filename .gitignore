@@ -1,5 +1,6 @@
 # IDE RELATED
 .idea/**
+.ipynb_checkpoints/**
 configuration.json
 crbdm.log
 cache/**

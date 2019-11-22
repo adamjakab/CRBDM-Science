@@ -9,9 +9,6 @@ import pandas as pd
 from lib.cached_data_loader import CachedDataLoader
 from lib.panda_plotter import PandaPlotter
 
-# Other Options
-# pd.set_option('display.max_rows', None)
-
 # Init the main tools
 cdl = CachedDataLoader()
 pp = PandaPlotter()
@@ -31,6 +28,10 @@ plotconfig = {
     "y_column": "BATCH_COUNT",
     "x_label": "Timestamp",
     "y_label": "Mqtt batch count per hour",
+    "x_major_ticks_freq": 24,
+    "x_minor_ticks_freq": 6,
+    "y_major_ticks_freq": 2,
+    "y_minor_ticks_freq": 1,
     "palette_color": "purple"
 }
 pp.plot(plotconfig, mdf, save=True)
