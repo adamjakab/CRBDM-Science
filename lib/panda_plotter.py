@@ -27,7 +27,7 @@ class PandaPlotter:
 
 
     def plot(self, plotconfig, df, show=True, save=False):
-        fig = plt.figure()
+        fig = plt.figure(num=None, figsize=(8, 5), dpi=96, facecolor='w', edgecolor='k')
         ax = fig.add_subplot(1, 1, 1)
 
         # Colors (from .colors import xkcd_rgb, crayons)
@@ -65,7 +65,6 @@ class PandaPlotter:
 
         y_major_ticks = y[0::2]
         y_minor_ticks = y[0::1]
-        print(y_major_ticks)
         ax.set_yticks(y_major_ticks)
         ax.set_yticks(y_minor_ticks, minor=True)
 
