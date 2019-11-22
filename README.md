@@ -14,7 +14,7 @@ Timestamp(ts)
 Description: The timestamp created by the database server when the payload was received. Consecutive timestamps are
 received 5 minute apart. The current configuration stores at the same frequency.
 
-![Plot 4](Plots/hourly_average_client_count_full_period.png?raw=true "Plot 4")
+![Plot 4](images/hourly_average_client_count_full_period.png?raw=true "Plot 4")
 
 SQL:
 ```mysql
@@ -35,7 +35,7 @@ Description: The payloads come in batches 5 minute apart. Each batch will contai
 number serves the purpose to be able to identify the payloads that arrived together in the same batch. The number of 
 payloads per batch tells the actual number of connected devices at ITU in a certain point.
 
-![Plot 2](Plots/plot_2.png?raw=true "Plot 2")
+![Plot 2](images/plot_2.png?raw=true "Plot 2")
  
 SQL:
 ```mysql
@@ -49,7 +49,7 @@ GROUP BY mqtt_batch
 ORDER BY mqtt_batch
 ```
 
-![Plot 3](Plots/plot_3.png?raw=true "Plot 3")
+![Plot 3](images/plot_3.png?raw=true "Plot 3")
 
 SQL:
 ```mysql
@@ -224,7 +224,7 @@ OS(os)
 -------
 Description: The Operating System installed on the connected client.
 
-![Plot 1](Plots/plot_1.png?raw=true "Plot 1")
+![Plot 1](images/plot_1.png?raw=true "Plot 1")
 
 SQL:
 ```mysql
@@ -291,9 +291,9 @@ GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)
 ; 
 ```
 
-![Plot 5](Plots/plot_5.png?raw=true "Plot 5")
+![Plot 5](images/plot_5.png?raw=true "Plot 5")
 
-![Plot 6](Plots/plot_6.png?raw=true "Plot 6")
+![Plot 6](images/plot_6.png?raw=true "Plot 6")
 
 Utility:
 - Students who use the wi-fi regularly at ITU use either "eduroam" or "ITU++". These networks will also have non-students. 
@@ -327,7 +327,7 @@ SQL: SELECT DISTINCT(user_profile) FROM wifi_clients'
 7            5te-7
 ```
 
-![Plot 7](Plots/plot_7.png?raw=true "Plot 7")
+![Plot 7](images/plot_7.png?raw=true "Plot 7")
 
 ```mysql
 # SQL for plots:
