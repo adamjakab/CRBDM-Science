@@ -48,7 +48,7 @@ for p in range(0, 101, 25):
 
 
 # # Fit a normal distribution to the data:
-# loc, scale = stats.norm.fit(data)
+loc, scale = stats.norm.fit(data)
 #
 # # Print Some stuff
 # print("Desc(data): {0}".format(stats.describe(data)))
@@ -57,15 +57,15 @@ for p in range(0, 101, 25):
 # # Plot the histogram.
 plt.hist(data, bins=bins, alpha=0.6, color='g',  histtype='step')
 #
-# # Plot the PDF.
-# xmin, xmax = plt.xlim()
-# x = np.linspace(xmin, xmax, bins)
-# # print("x: {0}".format(x))
-# p = stats.norm.pdf(x, loc, scale)
-# plt.plot(x, p, 'k', linewidth=2)
-# title = plotconfig["plot_title"] + "(mean = %.2f,  std = %.2f)" % (loc, scale)
-# plt.title(title)
-#
+# Plot the PDF.
+xmin, xmax = plt.xlim()
+x = np.linspace(xmin, xmax, bins)
+# print("x: {0}".format(x))
+p = stats.norm.pdf(x, loc, scale)
+plt.plot(x, p, 'k', linewidth=2)
+title = plotconfig["plot_title"] + "(mean = %.2f,  std = %.2f)" % (loc, scale)
+plt.title(title)
+
 plt.show()
 
 
