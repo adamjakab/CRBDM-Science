@@ -42,6 +42,7 @@ class CachedDataLoader:
         return df
 
     def reindex_by_timestamp(self, df, ts_col_name, freq):
+        # Remove duplicates: mdf = mdf[~mdf["ts"].duplicated()]
         new_index = pd.date_range(start=df[ts_col_name].min(), end=df[ts_col_name].max(), freq=freq)
         df[ts_col_name] = pd.to_datetime(df[ts_col_name])
         df.set_index(ts_col_name, inplace=True, drop=True)
