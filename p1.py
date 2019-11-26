@@ -18,7 +18,7 @@ df = cdl.reindex_by_timestamp(df, "ts", "1H")
 
 # Filter a time period by mask
 mask = (df['ts'] >= '2019-10-21 00:00:00') & (df['ts'] <= '2019-10-26 00:00:00')
-mdf_1 = df.loc[mask]
+mdf = df.loc[mask]
 # print(mdf_1)
 
 
@@ -26,8 +26,8 @@ plotconfig = {
     "title": "Major Downtime 23-24 October",
     "plots": [
         {
-            "data": mdf_1,
-            "title": "Major Downtime 23-24 October",
+            "data": mdf,
+            "title": "",
             "x_column": "ts",
             "y_column": ["mqtt_count"],
             "x_label": "Time (granularity 1H)",
