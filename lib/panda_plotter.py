@@ -4,6 +4,7 @@ import re
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import matplotlib.dates as mpldates
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -175,7 +176,9 @@ class PandaPlotter:
                             hspace=pstyle["hspace"], wspace=pstyle["wspace"])
 
         if pstyle["x_axis_value_format"] != "":
-            ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(pstyle["x_axis_value_format"]))
+            #ax.xaxis.set_major_formatter(ticker.FormatStrFormatter(pstyle["x_axis_value_format"]))
+            ax.xaxis.set_major_formatter(mpldates.DateFormatter(pstyle["x_axis_value_format"]))
+
 
         if pstyle["y_axis_value_format"] != "":
             ax.yaxis.set_major_formatter(ticker.FormatStrFormatter(pstyle["y_axis_value_format"]))
