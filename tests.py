@@ -12,15 +12,7 @@ from lib.panda_plotter import PandaPlotter
 cdl = CachedDataLoader()
 pp = PandaPlotter()
 
-sql = 'SELECT DATE_FORMAT(MIN(ts), "%Y-%m-%d %H:00:00") AS ts, ' \
-      'ROUND(COUNT(*) / COUNT(DISTINCT mqtt_batch)) AS CNT_PER_MIN, COUNT(DISTINCT mqtt_batch) AS BN,' \
-      'ROUND(SUM(IF(ssid = "5te", 1, 0)) / COUNT(DISTINCT mqtt_batch))       AS CNT_5TE, ' \
-      'ROUND(SUM(IF(ssid = "eduroam", 1, 0)) / COUNT(DISTINCT mqtt_batch))   AS CNT_EDUROAM, ' \
-      'ROUND(SUM(IF(ssid = "ITU++", 1, 0)) / COUNT(DISTINCT mqtt_batch))     AS CNT_ITU_PLUS, ' \
-      'ROUND(SUM(IF(ssid = "ITU-guest", 1, 0)) / COUNT(DISTINCT mqtt_batch)) AS CNT_ITU_GUEST, ' \
-      'ROUND(SUM(IF(ssid = "sensors", 1, 0)) / COUNT(DISTINCT mqtt_batch))   AS CNT_SENSORS ' \
-      'FROM wifi_clients ' \
-      'GROUP BY YEAR(ts), MONTH(ts), DAY(ts), HOUR(ts)'
+sql = "SELECT * FROM "
 
 df = cdl.get_dataframe(sql)
 df = cdl.reindex_by_timestamp(df, "ts", "1H")
