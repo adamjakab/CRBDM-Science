@@ -17,29 +17,29 @@ df = cdl.get_dataframe(sql)
 df = cdl.reindex_by_timestamp(df, "ts", "1H")
 
 # Filter a time period by mask
-mask = (df['ts'] >= '2019-10-21 00:00:00') & (df['ts'] <= '2019-10-26 00:00:00')
-mdf = df.loc[mask]
+#mask = (df['ts'] >= '2019-10-21 00:00:00') & (df['ts'] <= '2019-10-26 00:00:00')
+#mdf = df.loc[mask]
 # print(mdf_1)
 
 
 plotconfig = {
-    "title": "Major Downtime 23-24 October",
+    "title": "Overview",
     "plots": [
         {
-            "data": mdf,
+            "data": df,
             "title": "",
             "x_column": "ts",
             "y_column": ["mqtt_count"],
-            "x_label": "Time (granularity 1H)",
+            "x_label": "Time",
             "y_label": "Number of MQTT batches per hour",
-            "x_major_ticks_freq": 24,
-            "x_minor_ticks_freq": 6,
+            "x_major_ticks_freq": 24*7,
+            "x_minor_ticks_freq": 24,
             "y_major_ticks_freq": 2,
             "y_minor_ticks_freq": 1,
         }
     ],
     "style": {
-        "palette_color": "purple",
+        "palette_color": "red",
         "x_axis_value_rotation": 45,
         "y_axis_value_format": "",
     }
