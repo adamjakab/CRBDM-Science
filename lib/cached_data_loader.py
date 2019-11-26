@@ -33,24 +33,22 @@ class CachedDataLoader:
         # Do some maintenance
         self._clear_cache()
 
-    def get_dataframe(self, sql, reindex=False):
+    def get_dataframe(self, sql):
         index_column = None
         # if "index_column" in self._plot_config:
         #     index_column = self._plot_config["index_column"]
 
         df = self._get_panda_frame(sql, index_col=index_column)
-
-        # Reindex for missing TS data (ugly)
-        if reindex:
-            new_index = pd.date_range(start=df.TS.min(), end=df.TS.max(), freq="1H")
-            df['TS'] = pd.to_datetime(df['TS'])
-            df.set_index("TS", inplace=True, drop=True)
-            #
-            df2 = df.reindex(new_index, fill_value=0)
-            df2 = df2.fillna(0.0).rename_axis('TS').reset_index()
-            df = df2
-
         return df
+
+    def reindex_by_timestamp(self, df, ts_col_name, freq):
+        new_index = pd.date_range(start=df[ts_col_name].min(), end=df[ts_col_name].max(), freq=freq)
+        df[ts_col_name] = pd.to_datetime(df[ts_col_name])
+        df.set_index(ts_col_name, inplace=True, drop=True)
+        #
+        df2 = df.reindex(new_index, fill_value=0)
+        df2 = df2.fillna(0.0).rename_axis(ts_col_name).reset_index()
+        return df2
 
     def get_db_connection(self):
         conn_data = self._config["db"]
