@@ -12,17 +12,15 @@ from lib.panda_plotter import PandaPlotter
 cdl = CachedDataLoader()
 pp = PandaPlotter()
 
-sql = "SELECT * FROM "
-
+sql = "SELECT * FROM v__wcb__h__record_counts;"
 df = cdl.get_dataframe(sql)
 df = cdl.reindex_by_timestamp(df, "ts", "1H")
-
-mask = (df['ts'] >= '2019-11-01 00:00:00') & (df['ts'] <= '2019-12-01 00:00:00')
+mask = (df['ts'] >= '2019-11-10 00:00:00') & (df['ts'] <= '2019-11-20 00:00:00')
 mdf = df.loc[mask]
 
 
 plotconfig = {
-    "title": "Wifi Network Usage: 'eduroam' & 'ITU++'",
+    "title": "Connected devices - 3 scenarios",
     "plots": [
         {
             "data": mdf,
@@ -45,5 +43,5 @@ plotconfig = {
         "y_axis_value_format": "",
     }
 }
-pp.plot(plotconfig)
+#pp.plot(plotconfig)
 

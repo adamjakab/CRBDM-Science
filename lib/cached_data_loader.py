@@ -33,11 +33,7 @@ class CachedDataLoader:
         # Do some maintenance
         self._clear_cache()
 
-    def get_dataframe(self, sql):
-        index_column = None
-        # if "index_column" in self._plot_config:
-        #     index_column = self._plot_config["index_column"]
-
+    def get_dataframe(self, sql, index_column=None):
         df = self._get_panda_frame(sql, index_col=index_column)
         return df
 
